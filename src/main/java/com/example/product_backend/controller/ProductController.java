@@ -1,13 +1,28 @@
 package com.example.product_backend.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.product_backend.dao.ProductsDao;
+import com.example.product_backend.model.Products;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class ProductController {
-    @PostMapping("/")
-    public String Productadd(){
+    @Autowired
+    private ProductsDao dao;
+    @CrossOrigin(origins = "*")
+    @PostMapping(path="/addproduct",consumes = "application/json",produces = "application/json")
+    public String Productadd(@RequestBody Products p){
+        System.out.println(p.getProductcode().toString());
+        System.out.println(p.getProductname().toString());
+        System.out.println(p.getManufacturingDate().toString());
+        System.out.println(p.getExpirydate().toString());
+        System.out.println(p.getBrand());
+        System.out.println(p.getPrice().toString());
+        System.out.println(p.getSellername().toString());
+        System.out.println(p.getDistributorname().toString());
+        dao.save(p);
         return "Welcome to product add page";
     }
 
@@ -20,10 +35,11 @@ public class ProductController {
     public String Productedit(){
         return "Welcome to product edit page";
     }
-
+     @CrossOrigin(origins = "*")
     @GetMapping("/productviewall")
-    public String Productviewall(){
-        return "Welcome to product view all page";
+    public List<Products> Productviewall(){
+
+        return (List<Products>) dao.findAll();
     }
 
     @PostMapping("/productdelete")
